@@ -175,18 +175,18 @@ const swaggerDocument = {
     // ── Flights ──
     '/flights': {
       get:  { tags: ['Flights'], summary: 'Get all flights', responses: { 200: { description: 'Success' } } },
-      post: { tags: ['Flights'], summary: 'Add a flight', requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { flightNumber: { type: 'string' }, airlineId: { type: 'integer' }, from: { type: 'string' }, to: { type: 'string' }, departure: { type: 'string' }, arrival: { type: 'string' }, date: { type: 'string' } } } } } }, responses: { 201: { description: 'Created' } } },
+      post: { tags: ['Flights'], summary: 'Add a flight (id auto-generated)', requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['flightNumber', 'airlineId', 'from', 'to', 'departure', 'arrival', 'date'], properties: { flightNumber: { type: 'string' }, airlineId: { type: 'integer' }, from: { type: 'string' }, to: { type: 'string' }, departure: { type: 'string' }, arrival: { type: 'string' }, date: { type: 'string' }, status: { type: 'string', enum: ['On Time', 'Delayed', 'Cancelled', 'Boarding'], description: 'Optional: defaults to "On Time"' } } } } } }, responses: { 201: { description: 'Created' } } },
     },
     '/flights/{id}': {
       get:    { tags: ['Flights'], summary: 'Get flight by ID', parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }], responses: { 200: { description: 'Success' } } },
-      put:    { tags: ['Flights'], summary: 'Update flight',    parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }], requestBody: { required: true, content: { 'application/json': { schema: { type: 'object' } } } }, responses: { 200: { description: 'Updated' } } },
+      put:    { tags: ['Flights'], summary: 'Update flight',    parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }], requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { flightNumber: { type: 'string' }, airlineId: { type: 'integer' }, from: { type: 'string' }, to: { type: 'string' }, departure: { type: 'string' }, arrival: { type: 'string' }, date: { type: 'string' }, status: { type: 'string', enum: ['On Time', 'Delayed', 'Cancelled', 'Boarding'] } } } } } }, responses: { 200: { description: 'Updated' } } },
       delete: { tags: ['Flights'], summary: 'Delete flight',    parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }], responses: { 200: { description: 'Deleted' } } },
     },
     '/flights/{id}/status': {
       patch: { tags: ['Flights'], summary: 'Update flight status', parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }], requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { status: { type: 'string', enum: ['On Time', 'Delayed', 'Cancelled', 'Boarding'] } } } } } }, responses: { 200: { description: 'Updated' } } },
     },
     '/flights/status/{status}': {
-      get: { tags: ['Flights'], summary: 'Get flights by status', parameters: [{ in: 'path', name: 'status', required: true, schema: { type: 'string' } }], responses: { 200: { description: 'Success' } } },
+      get: { tags: ['Flights'], summary: 'Get flights by status', parameters: [{ in: 'path', name: 'status', required: true, schema: { type: 'string', enum: ['On Time', 'Delayed', 'Cancelled', 'Boarding'] } }], responses: { 200: { description: 'Success' } } },
     },
     // ── Passengers ──
     '/passengers': {

@@ -97,7 +97,7 @@ app.get('/flights/status/:status', (req, res) => {
  * @swagger
  * /flights:
  *   post:
- *     summary: Add a new flight
+ *     summary: Add a new flight (id is auto-generated)
  *     tags: [Flights]
  *     requestBody:
  *       required: true
@@ -121,15 +121,19 @@ app.get('/flights/status/:status', (req, res) => {
  *                 type: string
  *               date:
  *                 type: string
+ *               status:
+ *                 type: string
+ *                 enum: [On Time, Delayed, Cancelled, Boarding]
+ *                 description: Optional - defaults to "On Time"
  *     responses:
  *       201:
  *         description: Flight added
  */
 app.post('/flights', (req, res) => {
-  const { flightNumber, airlineId, from, to, departure, arrival, date } = req.body;
+  const { flightNumber, airlineId, from, to, departure, arrival, date, status } = req.body;
   if (!flightNumber || !airlineId || !from || !to || !departure || !arrival || !date)
     return res.status(400).json({ message: 'All fields are required' });
-  const flight = { id: nextId++, flightNumber, airlineId, from, to, departure, arrival, date, status: 'On Time' };
+  const flight = { id: nextId++, flightNumber, airlineId, from, to, departure, arrival, date, status: status || 'On Time' };
   flights.push(flight);
   res.status(201).json(flight);
 });
@@ -191,6 +195,8 @@ app.patch('/flights/:id/status', (req, res) => {
  *             properties:
  *               flightNumber:
  *                 type: string
+ *               airlineId:
+ *                 type: integer
  *               from:
  *                 type: string
  *               to:
@@ -201,6 +207,10 @@ app.patch('/flights/:id/status', (req, res) => {
  *                 type: string
  *               date:
  *                 type: string
+ *               status:
+ *                 type: string
+ *                 enum: [On Time, Delayed, Cancelled, Boarding]
+ *                 description: Optional status update
  *     responses:
  *       200:
  *         description: Flight updated
